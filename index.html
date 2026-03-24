@@ -511,6 +511,25 @@
     color: rgba(74,45,53,0.2);
     text-transform: uppercase;
   }
+
+  /* FLOATING MUSIC BTN */
+  #floatMusic {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 100;
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blush), var(--rose));
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 18px rgba(184,77,99,0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  #floatMusic:hover { transform: scale(1.1); box-shadow: 0 6px 22px rgba(184,77,99,0.45); }
+  #floatMusic.playing { background: linear-gradient(135deg, var(--rose), var(--mauve)); }
 </style>
 </head>
 <body>
@@ -527,13 +546,19 @@
     คือสิ่งที่ดีที่สุดในชีวิต
   </p>
 
-  <!-- เพลงจะเล่นอัตโนมัติเมื่อผู้ใช้แตะหน้าจอครั้งแรก -->
+  <!-- เพลงจะเล่นเมื่อกดปุ่ม -->
   <audio id="bgAudio" loop>
     <source src="music.mp3" type="audio/mpeg">
   </audio>
 
   <div class="hero-line"></div>
 </div>
+
+<!-- FLOATING MUSIC BUTTON -->
+<button id="floatMusic" onclick="toggleMusic()" title="เปิด/ปิดเพลง">
+  <svg id="iconPlay" viewBox="0 0 10 12" width="14" height="14"><polygon points="0,0 10,6 0,12" fill="currentColor"/></svg>
+  <span id="iconPause" style="display:none; font-size:12px; letter-spacing:2px; line-height:1">❚❚</span>
+</button>
 
 <!-- GALLERY -->
 <div class="section">
@@ -714,18 +739,29 @@
   update();
   setInterval(update, 1000);
 
-  // Autoplay on first interaction
+  // Music
   const audio = document.getElementById('bgAudio');
   audio.volume = 0.5;
-  const startMusic = () => {
-    audio.play().catch(() => {});
-    document.removeEventListener('click', startMusic);
-    document.removeEventListener('touchstart', startMusic);
-    document.removeEventListener('keydown', startMusic);
-  };
-  document.addEventListener('click', startMusic);
-  document.addEventListener('touchstart', startMusic);
-  document.addEventListener('keydown', startMusic);
+  let playing = false;
+
+  function toggleMusic() {
+    const btn = document.getElementById('floatMusic');
+    const play = document.getElementById('iconPlay');
+    const pause = document.getElementById('iconPause');
+    if (!playing) {
+      audio.play();
+      play.style.display = 'none';
+      pause.style.display = 'inline';
+      btn.classList.add('playing');
+      playing = true;
+    } else {
+      audio.pause();
+      play.style.display = 'block';
+      pause.style.display = 'none';
+      btn.classList.remove('playing');
+      playing = false;
+    }
+  }
 </script>
 </body>
 </html>
