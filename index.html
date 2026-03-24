@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8 ปีที่มีเธอ</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #c8506a;
+    --blush: #f2a7b8;
+    --cream: #fdf6f0;
+    --gold: #c9a96e;
+    --deep: #12080e;
+    --muted: rgba(253,246,240,0.52);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep);
+    color: var(--cream);
+    font-family: 'Sarabun', sans-serif;
+    overflow-x: hidden;
+  }
+
+  .stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--dur) ease-in-out infinite var(--delay);
+    opacity: 0;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: 0; }
+    50%      { opacity: var(--bright); }
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 1.5rem;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 65% 50% at 50% 55%, rgba(200,80,106,0.18) 0%, transparent 70%);
+    z-index: -1;
+  }
+
+  .badge {
+    font-size: 0.72rem;
+    letter-spacing: 0.32em;
+    color: var(--gold);
+    text-transform: uppercase;
+    border: 1px solid rgba(201,169,110,0.3);
+    padding: 0.45rem 1.8rem;
+    border-radius: 50px;
+    margin-bottom: 3rem;
+    animation: fadeUp 1s ease 0.1s both;
+  }
+
+  .hero-num {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(8rem, 24vw, 15rem);
+    font-weight: 700;
+    line-height: 0.85;
+    background: linear-gradient(140deg, #f9d29d 0%, var(--rose) 50%, #f9d29d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeUp 1s ease 0.3s both;
+  }
+
+  .hero-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.5rem, 5vw, 3rem);
+    color: var(--blush);
+    margin-top: 1rem;
+    letter-spacing: 0.06em;
+    animation: fadeUp 1s ease 0.5s both;
+  }
+
+  .hero-sub {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--muted);
+    margin-top: 2rem;
+    line-height: 2.2;
+    animation: fadeUp 1s ease 0.7s both;
+  }
+
+  /* MUSIC BUTTON */
+  .music-btn {
+    margin-top: 2.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(200,80,106,0.12);
+    border: 1px solid rgba(200,80,106,0.35);
+    color: var(--blush);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    padding: 0.7rem 1.6rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: fadeUp 1s ease 0.9s both;
+    text-decoration: none;
+  }
+  .music-btn:hover {
+    background: rgba(200,80,106,0.22);
+    border-color: var(--rose);
+    color: var(--cream);
+    transform: scale(1.04);
+  }
+  .music-btn .icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--rose);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+  .music-btn:hover .icon { transform: scale(1.1); }
+  .music-btn .icon svg { width: 12px; height: 12px; fill: white; margin-left: 2px; }
+  .music-btn.playing .icon svg { display: none; }
+  .music-btn.playing .icon::after {
+    content: '■';
+    font-size: 10px;
+    color: white;
+    margin-left: 0;
+  }
+
+  .hero-line {
+    margin-top: 3rem;
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--rose), transparent);
+    animation: fadeUp 1s ease 1.1s both, grow 2s ease-in-out 2s infinite alternate;
+  }
+  @keyframes grow {
+    from { height: 40px; opacity: 0.4; }
+    to   { height: 75px; opacity: 0.9; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* LAYOUT */
+  .section {
+    position: relative;
+    z-index: 2;
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 5.5rem 1.5rem;
+  }
+
+  .section-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.9rem, 5.5vw, 3.2rem);
+    line-height: 1.25;
+    margin-bottom: 0.5rem;
+    color: var(--cream);
+  }
+  .section-title em { font-style: italic; color: var(--rose); }
+
+  .rule {
+    width: 50px; height: 1px;
+    background: rgba(200,80,106,0.35);
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* GALLERY */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 2.8rem;
+  }
+  @media (max-width: 540px) {
+    .gallery { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .photo {
+    aspect-ratio: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(200,80,106,0.07);
+    border: 1px solid rgba(200,80,106,0.14);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .p1 { background-image: url('image/1.jpg'); }
+  .p2 { background-image: url('image/3.jpg'); }
+  .p3 { background-image: url('image/4.jpg'); }
+  .p4 { background-image: url('image/5.jpg'); }
+  .p5 { background-image: url('image/6.jpg'); }
+  .p6 { background-image: url('image/8.5.jpg'); }
+  .p7 { background-image: url('image/11.jpg'); }
+  .p8 { background-image: url('image/12.jpg'); }
+  .p9 { background-image: url('image/14.jpg'); }
+
+  /* TIMELINE */
+  .timeline {
+    margin-top: 3rem;
+    padding-left: 1.8rem;
+    position: relative;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px; bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--rose), transparent);
+  }
+
+  .tl-item {
+    position: relative;
+    padding-bottom: 2.8rem;
+    opacity: 0;
+    transform: translateX(-16px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+  .tl-item.visible { opacity: 1; transform: translateX(0); }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -1.88rem; top: 7px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--rose);
+    border: 2px solid var(--deep);
+    box-shadow: 0 0 10px rgba(200,80,106,0.55);
+  }
+
+  .tl-year {
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+  }
+  .tl-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.12rem;
+    margin-bottom: 0.35rem;
+    color: var(--cream);
+  }
+  .tl-desc {
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.85;
+  }
+
+  /* LETTER SECTION */
+  .letter-wrap {
+    margin-top: 2.8rem;
+    border: 1px solid rgba(200,80,106,0.16);
+    border-radius: 20px;
+    padding: 3rem 3rem 2.5rem;
+    background: rgba(200,80,106,0.04);
+    position: relative;
+  }
+  .letter-wrap::before {
+    content: '\201C';
+    font-family: 'Playfair Display', serif;
+    font-size: 9rem;
+    color: var(--rose);
+    opacity: 0.08;
+    position: absolute;
+    top: -2rem; left: 2rem;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .letter-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+    line-height: 2.2;
+    color: rgba(253,246,240,0.88);
+  }
+
+  .letter-sign {
+    margin-top: 2.2rem;
+    text-align: right;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: rgba(200,80,106,0.8);
+  }
+
+  /* SECRET LETTER BUTTON */
+  .secret-wrap {
+    margin-top: 2.5rem;
+    text-align: center;
+  }
+
+  .secret-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: transparent;
+    border: 1px solid rgba(200,80,106,0.35);
+    color: var(--blush);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.04em;
+  }
+  .secret-btn:hover {
+    background: rgba(200,80,106,0.1);
+    border-color: var(--rose);
+    color: var(--cream);
+    transform: scale(1.03);
+  }
+
+  /* POPUP OVERLAY */
+  .popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(8,3,6,0.88);
+    backdrop-filter: blur(12px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    animation: overlayIn 0.3s ease;
+  }
+  .popup-overlay.open { display: flex; }
+
+  @keyframes overlayIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .popup-card {
+    background: #1e0c14;
+    border: 1px solid rgba(200,80,106,0.25);
+    border-radius: 24px;
+    padding: 3.5rem 3rem 3rem;
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    animation: cardIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: scale(0.88) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .popup-card::before {
+    content: '\2665';
+    position: absolute;
+    top: -1rem; left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.6rem;
+    color: var(--rose);
+    background: #1e0c14;
+    padding: 0 0.6rem;
+    line-height: 1;
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+  @keyframes heartbeat {
+    0%,100% { transform: translateX(-50%) scale(1); }
+    14%     { transform: translateX(-50%) scale(1.25); }
+    28%     { transform: translateX(-50%) scale(1); }
+    42%     { transform: translateX(-50%) scale(1.15); }
+    56%     { transform: translateX(-50%) scale(1); }
+  }
+
+  .popup-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .popup-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.15rem, 3vw, 1.35rem);
+    line-height: 2.2;
+    color: rgba(253,246,240,0.9);
+    text-align: center;
+  }
+
+  .popup-sign {
+    margin-top: 2rem;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(200,80,106,0.8);
+  }
+
+  .popup-close {
+    display: block;
+    margin: 2.5rem auto 0;
+    background: transparent;
+    border: 1px solid rgba(200,80,106,0.3);
+    color: var(--muted);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    padding: 0.6rem 1.8rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .popup-close:hover {
+    border-color: var(--rose);
+    color: var(--cream);
+  }
+
+  /* COUNTER */
+  .num-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2.8rem;
+  }
+  @media (max-width: 480px) {
+    .num-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .num-box {
+    border: 1px solid rgba(200,80,106,0.16);
+    border-radius: 14px;
+    padding: 1.8rem 0.8rem;
+    text-align: center;
+    background: rgba(200,80,106,0.04);
+  }
+  .num-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--rose);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .num-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 0.6rem;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 5rem 1.5rem 4rem;
+    border-top: 1px solid rgba(200,80,106,0.08);
+  }
+  .footer-rule {
+    width: 35px; height: 1px;
+    background: var(--rose);
+    opacity: 0.35;
+    margin: 0 auto 2.2rem;
+  }
+  .footer-main {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.3rem, 4vw, 2rem);
+    color: rgba(253,246,240,0.65);
+    line-height: 1.8;
+  }
+  .footer-small {
+    margin-top: 1.8rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.28em;
+    color: rgba(253,246,240,0.18);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">Happy 8th Anniversary</div>
+  <div class="hero-num">8</div>
+  <div class="hero-label">ปีที่มีเธอ</div>
+  <p class="hero-sub">
+    ทุกวันที่ผ่านมา<br>
+    คือสิ่งที่ดีที่สุดในชีวิต
+  </p>
+
+  <!-- ===== แก้ href เป็น link เพลงของคุณได้เลย ===== -->
+  <a class="music-btn" href="https://www.youtube.com/watch?v=615UN4fAlAM&list=RD615UN4fAlAM&start_radio=1" target="_blank" id="musicBtn">
+    <span class="icon">
+      <svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg>
+    </span>
+    ลองกดดู
+  </a>
+
+  <div class="hero-line"></div>
+</div>
+
+<!-- GALLERY -->
+<div class="section">
+  <p class="section-label">ช่วงเวลาของเรา</p>
+  <h2 class="section-title">ภาพความทรงจำ<br><em>ที่ไม่มีวันลืม</em></h2>
+  <div class="gallery">
+    <div class="photo p1"></div>
+    <div class="photo p2"></div>
+    <div class="photo p3"></div>
+    <div class="photo p4"></div>
+    <div class="photo p5"></div>
+    <div class="photo p6"></div>
+    <div class="photo p7"></div>
+    <div class="photo p8"></div>
+    <div class="photo p9"></div>
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<!-- TIMELINE -->
+<div class="section">
+  <p class="section-label">เส้นทางของเรา</p>
+  <h2 class="section-title">8 ปีที่<br><em>เดินด้วยกัน</em></h2>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-year">ปีที่ 1</div>
+      <div class="tl-title">วันแรกที่รู้จักกัน</div>
+      <div class="tl-desc">จุดเริ่มต้นที่ไม่คิดว่าจะมาไกลขนาดนี้</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">ปีที่ 2</div>
+      <div class="tl-title">ครั้งแรกที่ไปเที่ยวด้วยกัน</div>
+      <div class="tl-desc">เริ่มรู้ว่าอยู่ด้วยกันได้นานแค่ไหนก็ยังไม่พอ</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">ปีที่ 4</div>
+      <div class="tl-title">ผ่านช่วงที่ยากที่สุดมาด้วยกัน</div>
+      <div class="tl-desc">ไม่ได้ง่าย แต่ก็ไม่ได้ไปไหน</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">ปีที่ 6</div>
+      <div class="tl-title">ชีวิตประจำวันที่กลายเป็นความคุ้นเคย</div>
+      <div class="tl-desc">ไม่ต้องพูดอะไรมาก แค่มีกันก็พอ</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">ปีที่ 8</div>
+      <div class="tl-title">วันนี้</div>
+      <div class="tl-desc">8 ปีผ่านไปแล้ว และยังเลือกกันอยู่</div>
+    </div>
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<!-- LETTER -->
+<div class="section">
+  <p class="section-label">จากใจ</p>
+  <h2 class="section-title"><em>จดหมายรัก</em></h2>
+  <div class="letter-wrap">
+    <p class="letter-text">
+      ขอบคุณที่อยู่ด้วยกันมาตลอด 8 ปี<br><br>
+      ทะเลาะกันก็หลายครั้ง มีช่วงเวลาที่ยากก็มาก<br>
+      แต่ขอบคุณที่ไม่เคยหายไปไหน<br><br>
+      ไม่ว่าจะเป็นวันไหน ขอให้รู้ไว้ว่า<br>
+      การที่มีเธออยู่ข้างๆ คือสิ่งที่ดีที่สุดในชีวิต
+    </p>
+    <div class="letter-sign">— ด้วยรัก</div>
+  </div>
+
+  <!-- ปุ่ม Secret Letter -->
+  <div class="secret-wrap">
+    <button class="secret-btn" onclick="openPopup()">
+      &#9993; คนชื่อออยลองกดตรงนี้หน่อยยยย
+    </button>
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<!-- COUNTER -->
+<div class="section">
+  <p class="section-label">นับตั้งแต่ 25 มีนาคม 2561</p>
+  <h2 class="section-title">เราอยู่ด้วยกัน<br><em>มาแล้ว...</em></h2>
+  <div class="num-grid">
+    <div class="num-box">
+      <div class="num-val" id="cnt-years">—</div>
+      <div class="num-label">ปี</div>
+    </div>
+    <div class="num-box">
+      <div class="num-val" id="cnt-months">—</div>
+      <div class="num-label">เดือน</div>
+    </div>
+    <div class="num-box">
+      <div class="num-val" id="cnt-days">—</div>
+      <div class="num-label">วัน</div>
+    </div>
+    <div class="num-box">
+      <div class="num-val" id="cnt-hours">—</div>
+      <div class="num-label">ชั่วโมง</div>
+    </div>
+    <div class="num-box">
+      <div class="num-val" id="cnt-mins">—</div>
+      <div class="num-label">นาที</div>
+    </div>
+    <div class="num-box">
+      <div class="num-val" id="cnt-secs">—</div>
+      <div class="num-label">วินาที</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-rule"></div>
+  <p class="footer-main">
+    ขอบคุณที่ไม่หายไปไหน<br>
+    และขอให้ยังอยู่ด้วยกันต่อไปอีกนานเท่านาน
+  </p>
+  <p class="footer-small">8 Years Together · 25.03.2018</p>
+</footer>
+
+<!-- POPUP SECRET LETTER -->
+<div class="popup-overlay" id="popup">
+  <div class="popup-card">
+    <div class="popup-eyebrow">จดหมายลับ &#9825;</div>
+
+    <!-- ===== แก้ข้อความลับตรงนี้ได้เลย ===== -->
+    <p class="popup-text">
+      ถ้าอ่านถึงตรงนี้<br>
+      อยากให้รู้ว่าเค้ารักออยมากๆเลย<br><br>
+      ขอบคุณที่ยังอยู่ด้วยกันนะ
+    </p>
+    <div class="popup-sign">— ด้วยรักตลอดไป</div>
+
+    <button class="popup-close" onclick="closePopup()">ปิด</button>
+  </div>
+</div>
+
+<script>
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 100; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() < 0.15 ? 3 : 2;
+    s.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      width:${size}px; height:${size}px;
+      --dur:${2+Math.random()*4}s;
+      --delay:${Math.random()*6}s;
+      --bright:${0.25+Math.random()*0.55};
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // Timeline reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.25 });
+  document.querySelectorAll('.tl-item').forEach(el => obs.observe(el));
+
+  // Popup
+  function openPopup() {
+    document.getElementById('popup').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePopup() {
+    document.getElementById('popup').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('popup').addEventListener('click', function(e) {
+    if (e.target === this) closePopup();
+  });
+
+  // Live counter
+  const START = new Date(2018, 2, 25, 0, 0, 0);
+
+  function update() {
+    const now = new Date();
+    let years  = now.getFullYear() - START.getFullYear();
+    let months = now.getMonth()    - START.getMonth();
+    let days   = now.getDate()     - START.getDate();
+    let hours  = now.getHours()    - START.getHours();
+    let mins   = now.getMinutes()  - START.getMinutes();
+    let secs   = now.getSeconds()  - START.getSeconds();
+
+    if (secs < 0)  { secs += 60;  mins--; }
+    if (mins < 0)  { mins += 60;  hours--; }
+    if (hours < 0) { hours += 24; days--; }
+    if (days < 0)  { days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); months--; }
+    if (months < 0){ months += 12; years--; }
+
+    document.getElementById('cnt-years').textContent  = years;
+    document.getElementById('cnt-months').textContent = months;
+    document.getElementById('cnt-days').textContent   = days;
+    document.getElementById('cnt-hours').textContent  = String(hours).padStart(2,'0');
+    document.getElementById('cnt-mins').textContent   = String(mins).padStart(2,'0');
+    document.getElementById('cnt-secs').textContent   = String(secs).padStart(2,'0');
+  }
+
+  update();
+  setInterval(update, 1000);
+</script>
+</body>
+</html>
